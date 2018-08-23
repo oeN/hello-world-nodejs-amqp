@@ -8,7 +8,7 @@ spec:
         command:
           - rabbitmqctl
           - ping
-        initialDelaySeconds: 10
+        initialDelaySeconds: 57
         timeoutSeconds: 1
         failureThreshold: 3
         periodSeconds: 10
