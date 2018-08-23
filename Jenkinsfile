@@ -1,16 +1,14 @@
-def label = "mypod-${UUID.randomUUID().toString()}"
-podTemplate(label: label, containers: [
-    containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
-    containerTemplate(
-      name: 'rabbitmq', 
-      image: 'rabbitmq:alpine', 
-      ttyEnabled: true,
-      livenessProbe: containerLivenessProbe(execArgs: 'rabbitmqctl ping', , initialDelaySeconds: 60, timeoutSeconds: 1, failureThreshold: 3, periodSeconds: 10, successThreshold: 1)
-    )
-  ]) {
+pipeline {
+  agent {
+    kubernetes {
+      label "mypod-${UUID.randomUUID().toString()}"
+      yamlFile 'KubernetesPod.yaml'
+    }
+  }
 
-    node(label) {
-      stage('Test') {
+  stages {
+    stage('Test') {
+      steps {
         container('node') {
           sh 'node --version'
           checkout scm
@@ -18,14 +16,18 @@ podTemplate(label: label, containers: [
           sh "yarn test"
         }
       }
+    }
 
-      stage('Deploy') {
+    stage('Deploy') {
+      steps {
         echo 'Deploying....'
       }
-
-      stage('Logs') {
+    }
+    stage('Logs') {
+      steps {
         containerLog('node')
         containerLog('rabbitmq')
       }
     }
   }
+}

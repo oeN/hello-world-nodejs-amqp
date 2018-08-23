@@ -1,0 +1,19 @@
+spec:
+  containers:
+  - name: rabbitmq
+    image: rabbitmq:alpine
+    tty: true
+    readinessProbe:
+      exec:
+        command:
+          - rabbitmqctl
+          - ping
+        initialDelaySeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+  - name: node
+    image: node:alpine
+    tty: true
+    command: ['cat']
