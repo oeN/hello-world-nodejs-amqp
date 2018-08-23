@@ -1,8 +1,14 @@
 pipeline {
-  agent none
+  agent any
+
   stages {
+    stage('Build') {
+        steps {
+            echo 'Building..'
+        }
+    }
+
     stage('Test') {
-      agent any
       steps {
         checkout scm
 
@@ -25,6 +31,12 @@ pipeline {
           }
         }
       }
+    }
+
+    stage('Deploy') {
+        steps {
+            echo 'Deploying....'
+        }
     }
   }
 }
