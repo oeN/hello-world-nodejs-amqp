@@ -19,15 +19,13 @@ podTemplate(label: label, containers: [
         }
       }
 
+      stage('Deploy') {
+        echo 'Deploying....'
+      }
+
       stage('Logs') {
         containerLog('node')
         containerLog('rabbitmq')
-      }
-
-      stage('Deploy') {
-        steps {
-            echo 'Deploying....'
-        }
       }
     }
   }
